@@ -1,5 +1,15 @@
 <template>
-  <section id="content" style="display: none">初始内容</section>
+  <section id="content" style="display: none">
+    <p>
+      emoji图标：
+      <span emoji-type="apple"></span>
+      <span emoji-type="banana"></span>
+      <span emoji-type="cake"></span>
+      <span emoji-type="pear"></span>
+      <span emoji-type="pineapple" emoji-state="text"></span>
+      <span emoji-type="watermelon"></span>
+    </p>
+  </section>
   <section id="editor"></section>
 </template>
 
@@ -27,6 +37,21 @@ onMounted(() => {
 #editor {
   .ProseMirror {
     min-height: 400px;
+    outline: 1px solid #aaa;
+    .ProseMirror-selectednode {
+      outline: 2px solid #8cf;
+    }
+    // emoji
+    span[emoji-type][emoji-state="pic"] {
+      img {
+        width: 30px;
+      }
+    }
+    span[emoji-type][emoji-state="text"] {
+      span {
+        background: #eee;
+      }
+    }
   }
 }
 </style>

@@ -4,8 +4,10 @@ import { Schema } from "prosemirror-model";
 // prosemirror-schema-basic 包中定义了所有常用的 nodes 和 marks，除了 list。
 import { nodes as nodes_basic, marks as marks_basic } from "./schema-basic";
 
+import { emoji } from "./schema-emoji";
+
 const schema = new Schema({
-  nodes: nodes_basic,
+  nodes: { ...nodes_basic, emoji },
   marks: marks_basic,
 });
 

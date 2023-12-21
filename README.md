@@ -28,4 +28,67 @@ framework 选择 `Vue`，variant 选择 `JavaScript`
 
 1. 创建 schema
 2. 由 schema 创建 state（放在 onMounted 中）
+   如果 editor
 3. 由 state 创建 view（放在 onMounted 中）
+
+---
+
+## 创建 emoji node
+
+emoji 有两个属性：type 和 state
+
+### parseDom
+
+`parseDom` 是 `ParseRule` 构成的数组。每条 `ParseRule` 中必须包含 `tag` 或 `style` 字段，二选一。
+
+#### tag
+
+tag 的值是 css 选择器，`span`或者`span[aaa="bbb"]`等都可以。
+
+#### getAttrs
+
+`getAttrs` 有两个作用：
+
+- 作为一个更灵活的 filter，控制哪些情况 match，哪些情况不 match。有的时候情况比较复杂，仅用 tag 或者 style 时很难描述清，这时就要用 getAttrs 了。
+- 设置 attrs
+
+`getAttrs` 返回值：
+
+- 返回 false，说明不匹配。
+- 返回对象，说明匹配，对象的内容就是 attrs 的属性值。
+- 返回 null 或 undefined，则等同于返回空对象，说明匹配，但是不设置属性值
+
+### toDom
+
+#### 元素嵌套的写法：`span>img`
+
+1. 写法 1：描述性
+
+   ```js
+   return ["span", { "emoji-type": type, "emoji-state": state }, ["img", { src: urlMap[type] }]];
+   ```
+
+2. 写法 2：手动创建 dom 元素
+
+   ```js
+   const outerSpan = document.createElement("span");
+   outerSpan.setAttribute("emoji-type", type);
+   outerSpan.setAttribute("emoji-state", state);
+   const img = document.createElement("img");
+   img.setAttribute("src", urlMap[type]);
+   outerSpan.appendChild(img);
+   return outerSpan;
+   ```
+
+3. 写法 3：描述性+手动创建结合起来
+
+   ```js
+   const img = document.createElement("img");
+   img.setAttribute("src", urlMap[type]);
+   return ["span", { "emoji-type": type, "emoji-state": state }, img];
+   ```
+
+#### 给元素设置文本内容
+
+1. 写法 1 ：用 ::before 的 content
+2. 写法 2 ：在 toDom 中自己创建 dom 元素，设置 innerHTML
