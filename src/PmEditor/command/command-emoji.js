@@ -37,6 +37,22 @@ export function toggleSelectedEmojiState() {
 }
 
 /**
+ * 在选中位置插入emoji
+ * @param {String} emojiType apple/banana/cake/pear...
+ * @returns function(state,dispatch):true
+ */
+export function insertEmoji(emojiType) {
+  return function (state, dispatch) {
+    const newEmoji = state.schema.nodes.emoji.create({ type: emojiType });
+    const tr = state.tr.replaceSelectionWith(newEmoji);
+    if (dispatch) {
+      dispatch(tr);
+    }
+    return true;
+  };
+}
+
+/**
  * 获取选中的emoji。如果选区不是NodeSelection，或者选中的是其他类型的node，均返回null
  * @param {EditorState} state
  * @returns EmojiNodeSelection | null

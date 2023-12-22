@@ -1,29 +1,22 @@
 import { Plugin } from "prosemirror-state";
-import { ref } from "vue";
+import { reactive } from "vue";
 import { toggleSelectedEmojiState } from "../command";
 
 export const menuPlugin = new Plugin({
   view(view) {
-    updateMenusDisabledState(view);
+    updateButtonState(view);
     return {
       update(view) {
-        updateMenusDisabledState(view);
+        updateButtonState(view);
       },
     };
   },
 });
 
-export const menus = ref([
-  {
-    label: "切换emoji状态",
-    description: "切换选中的emoji的状态",
-    command: toggleSelectedEmojiState(),
-    disabled: false,
-  },
-]);
+export const buttonState = reactive({
+  toggleSelectedEmojiStateButton_disable: false,
+});
 
-function updateMenusDisabledState(view) {
-  menus.value.forEach((menu) => {
-    menu.disabled = !menu.command(view.state);
-  });
+function updateButtonState(view) {
+  buttonState.toggleSelectedEmojiStateButton_disable = !toggleSelectedEmojiState()(view.state);
 }

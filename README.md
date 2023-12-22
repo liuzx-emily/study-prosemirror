@@ -14,6 +14,14 @@ framework 选择 `Vue`，variant 选择 `JavaScript`
 
 - 安装 pm 包：`pnpm install prosemirror-commands prosemirror-example-setup prosemirror-history prosemirror-keymap prosemirror-model prosemirror-schema-basic prosemirror-schema-list prosemirror-state prosemirror-transform prosemirror-view`
 
+### 安装 ui library
+
+`pnpm i ant-design-vue`
+
+`pnpm i unplugin-vue-components -D`
+
+在 vite.config.js 中配置 [自动按需引入组件](https://antdv.com/docs/vue/introduce-cn#%E8%87%AA%E5%8A%A8%E6%8C%89%E9%9C%80%E5%BC%95%E5%85%A5%E7%BB%84%E4%BB%B6)
+
 ### 配置 eslint
 
 `npm init @eslint/config`

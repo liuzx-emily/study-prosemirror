@@ -1,24 +1,25 @@
 <template>
   <section>
-    <input
-      v-for="(menu, index) in menus"
-      :key="index"
-      :value="menu.label"
-      :title="menu.description"
-      :disabled="menu.disabled"
-      @click="callMenuCommand(menu)"
-      type="button"
-    />
+    <MenuInsertEmoji />
+    <a-button
+      title="切换选中的emoji的状态"
+      :disabled="buttonState.toggleSelectedEmojiStateButton_disable"
+      @click="callMenuCommand(toggleSelectedEmojiState())"
+      >切换emoji状态</a-button
+    >
   </section>
 </template>
 
 <script setup>
-import { inject } from "vue";
-import { menus } from "./menuPlugin";
+import { inject, provide } from "vue";
+import { buttonState } from "./menuPlugin";
+import MenuInsertEmoji from "./MenuInsertEmoji.vue";
+import { toggleSelectedEmojiState } from "../command";
 
 const editorView = inject("editorView");
 
-function callMenuCommand(menu) {
-  return menu.command(editorView.value.state, editorView.value.dispatch);
+provide("callMenuCommand", callMenuCommand);
+function callMenuCommand(command) {
+  return command(editorView.value.state, editorView.value.dispatch);
 }
 </script>

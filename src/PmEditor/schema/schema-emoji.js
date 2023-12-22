@@ -6,22 +6,13 @@ const pearUrl = new URL("../../assets/svg/pear.svg", import.meta.url).href;
 const pineappleUrl = new URL("../../assets/svg/pineapple.svg", import.meta.url).href;
 const watermelonUrl = new URL("../../assets/svg/watermelon.svg", import.meta.url).href;
 
-const urlMap = {
-  apple: appleUrl,
-  banana: bananaUrl,
-  cake: cakeUrl,
-  pear: pearUrl,
-  pineapple: pineappleUrl,
-  watermelon: watermelonUrl,
-};
-
-const textMap = {
-  apple: "苹果",
-  banana: "香蕉",
-  cake: "蛋糕",
-  pear: "梨",
-  pineapple: "菠萝",
-  watermelon: "西瓜",
+export const emojiMap = {
+  apple: { imgUrl: appleUrl, text: "苹果" },
+  banana: { imgUrl: bananaUrl, text: "香蕉" },
+  cake: { imgUrl: cakeUrl, text: "蛋糕" },
+  pear: { imgUrl: pearUrl, text: "梨" },
+  pineapple: { imgUrl: pineappleUrl, text: "菠萝" },
+  watermelon: { imgUrl: watermelonUrl, text: "西瓜" },
 };
 
 export const emoji = {
@@ -56,24 +47,28 @@ export const emoji = {
     if (state === "pic") {
       // state=pic，显示图片
       // 写法1：描述性
-      return ["span", { "emoji-type": type, "emoji-state": state }, ["img", { src: urlMap[type] }]];
+      return [
+        "span",
+        { "emoji-type": type, "emoji-state": state },
+        ["img", { src: emojiMap[type].imgUrl }],
+      ];
       /*       // 写法2：手动创建 dom 元素
       const outerSpan = document.createElement("span");
       outerSpan.setAttribute("emoji-type", type);
       outerSpan.setAttribute("emoji-state", state);
       const img = document.createElement("img");
-      img.setAttribute("src", urlMap[type]);
+      img.setAttribute("src", emojiMap[type].imgUrl);
       outerSpan.appendChild(img);
       return outerSpan; */
       /*       // 写法3：描述性+手动创建结合起来
       const img = document.createElement("img");
-      img.setAttribute("src", urlMap[type]);
+      img.setAttribute("src", emojiMap[type].imgUrl);
       return ["span", { "emoji-type": type, "emoji-state": state }, img]; */
     } else {
       // state=text，显示文字
       // 手动创建dom元素，用innerHTML设置文本
       const innerTextSpan = document.createElement("span");
-      innerTextSpan.innerHTML = `[${textMap[type]}]`;
+      innerTextSpan.innerHTML = `[${emojiMap[type].text}]`;
       const outerSpan = document.createElement("span");
       outerSpan.setAttribute("emoji-type", type);
       outerSpan.setAttribute("emoji-state", state);
