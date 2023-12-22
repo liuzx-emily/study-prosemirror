@@ -31,6 +31,23 @@ framework 选择 `Vue`，variant 选择 `JavaScript`
    如果 editor
 3. 由 state 创建 view（放在 onMounted 中）
 
+### vue3 中 editorView 不能用 ref()
+
+```js
+const editorView = ref();
+editorView.value = new EditorView(..)
+// 报错
+command_1(editorView.value.state, editorView.value.dispatch);
+```
+
+执行命令时会报错 `Uncaught RangeError: Applying a mismatched transaction`
+
+应该改用 `shallowRef`
+
+```js
+const editorView = shallowRef();
+```
+
 ---
 
 ## 创建 emoji node
@@ -92,3 +109,22 @@ tag 的值是 css 选择器，`span`或者`span[aaa="bbb"]`等都可以。
 
 1. 写法 1 ：用 ::before 的 content
 2. 写法 2 ：在 toDom 中自己创建 dom 元素，设置 innerHTML
+
+---
+
+## 添加 command 切换 emoji 状态
+
+command 格式：`function(state,dispatch)`
+
+### 修改节点 attrs
+
+不能直接 `node.attrs.a=1`，这样只会更新数据，视图不会变。
+
+用 setNodeAttribute 修改节点属性。
+
+```js
+const tr = state.tr.setNodeAttribute(...);
+dispatch(tr);
+```
+
+### 使用 Plugin 的 view 属性去实时更新菜单按钮状态
