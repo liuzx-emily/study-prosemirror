@@ -151,3 +151,9 @@ dispatch(tr);
 ```
 
 ### 使用 Plugin 的 view 属性去实时更新菜单按钮状态
+
+---
+
+## 高亮 emoji
+
+使用 decorations 给 emoji 添加 `class:'highlight'`
