@@ -22,7 +22,7 @@ import { EditorView } from "prosemirror-view";
 import { exampleSetup } from "prosemirror-example-setup";
 import schema from "./schema"; // step1 创建schema
 import EditorMenu from "./menu/EditorMenu.vue";
-import { menuPlugin } from "./menu/menuPlugin";
+import { plugin_updateMenuButtonState } from "./plugin/plugin-updateMenuButtonState";
 import "../assets/editor.css";
 
 const editorView = shallowRef(); // vue3中必须用shallowRef。如果用ref，会报错 Applying a mismatched transaction
@@ -33,7 +33,7 @@ onMounted(() => {
   const state = EditorState.create({
     doc: DOMParser.fromSchema(schema).parse(document.querySelector("#content")),
     // exampleSetup提供了input rules、keymaps、cursor、history、menu等插件。不需要它提供的菜单，通过menuBar:false关闭
-    plugins: exampleSetup({ schema, menuBar: false }).concat([menuPlugin]),
+    plugins: exampleSetup({ schema, menuBar: false }).concat([plugin_updateMenuButtonState]),
   });
   // step3 由 state 创建 view（因为使用了dom元素，所以必须放在onMounted中）
   editorView.value = new EditorView(document.querySelector("#editor"), { state });
