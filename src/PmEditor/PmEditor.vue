@@ -37,6 +37,7 @@ onMounted(() => {
   });
   // step3 由 state 创建 view（因为使用了dom元素，所以必须放在onMounted中）
   editorView.value = new EditorView(document.querySelector("#editor"), { state });
+  window.view = editorView.value;
 });
 </script>
 <style lang="scss">

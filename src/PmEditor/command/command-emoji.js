@@ -70,3 +70,37 @@ function getSelectedEmoji(state) {
     return null;
   }
 }
+
+/**
+ * 修改选区中所有emoji的状态
+ * @param {'text'|'pic'} emojiState
+ * @returns function(state,dispatch):true
+ */
+
+export function setStateOfAllEmojisInTheSelection(emojiState) {
+  return function (state, dispatch) {
+    const { from, to, empty } = state.selection;
+    if (empty) {
+      // 选区为空
+      return false;
+    }
+    const emojiNodes = [];
+    state.doc.nodesBetween(from, to, (node, pos) => {
+      if (node.type.name === "emoji" && node.attrs.state !== emojiState) {
+        emojiNodes.push({ node, pos });
+      }
+    });
+    if (emojiNodes.length === 0) {
+      // 选区中没有需要改变状态的emoji
+      return false;
+    }
+    if (dispatch) {
+      const tr = state.tr;
+      emojiNodes.forEach((emojiNode) => {
+        tr.setNodeAttribute(emojiNode.pos, "state", emojiState);
+      });
+      dispatch(tr);
+    }
+    return true;
+  };
+}
