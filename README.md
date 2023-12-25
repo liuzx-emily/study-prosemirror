@@ -39,6 +39,21 @@ framework 选择 `Vue`，variant 选择 `JavaScript`
    如果 editor
 3. 由 state 创建 view（放在 onMounted 中）
 
+### style
+
+prosemirror 没有内置任何样式，一些必要的 css 需要自己添加。比如：
+
+```css
+.ProseMirror-hideselection *::selection {
+  background: transparent;
+}
+.ProseMirror-selectednode {
+  outline: 2px solid #8cf;
+}
+```
+
+可以参考 prosemirror 官方 example 里的 editor.css，直接用或者在它的基础上修改。
+
 ### vue3 中 editorView 不能用 ref()
 
 ```js

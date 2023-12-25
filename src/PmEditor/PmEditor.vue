@@ -23,6 +23,7 @@ import { exampleSetup } from "prosemirror-example-setup";
 import schema from "./schema"; // step1 创建schema
 import EditorMenu from "./menu/EditorMenu.vue";
 import { menuPlugin } from "./menu/menuPlugin";
+import "../assets/editor.css";
 
 const editorView = shallowRef(); // vue3中必须用shallowRef。如果用ref，会报错 Applying a mismatched transaction
 provide("editorView", editorView);
@@ -43,9 +44,7 @@ onMounted(() => {
   .ProseMirror {
     min-height: 400px;
     outline: 1px solid #aaa;
-    .ProseMirror-selectednode {
-      outline: 2px solid #8cf;
-    }
+
     // emoji
     span[emoji-type][emoji-state="pic"] {
       img {
