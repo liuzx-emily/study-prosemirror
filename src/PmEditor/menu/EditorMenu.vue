@@ -35,6 +35,22 @@
       @mousedown.prevent="callMenuCommand(toggleMark(editorView.state.schema.marks.strong))"
       >B</a-button
     >
+    <a-button
+      title="标题1"
+      :disabled="false"
+      :class="{ active: menuButtonState.setHeading1_active }"
+      @mousedown.prevent="
+        callMenuCommand(setBlockType(editorView.state.schema.nodes.heading, { level: 1 }))
+      "
+      >H1</a-button
+    >
+    <a-button
+      title="段落"
+      :disabled="false"
+      :class="{ active: menuButtonState.setParagraph_active }"
+      @mousedown.prevent="callMenuCommand(setBlockType(editorView.state.schema.nodes.paragraph))"
+      >P</a-button
+    >
   </section>
 </template>
 
@@ -47,7 +63,7 @@ import {
   setStateOfAllEmojisInTheSelection,
   toggleHighlightEmoji,
 } from "../command";
-import { toggleMark } from "prosemirror-commands";
+import { toggleMark, setBlockType } from "prosemirror-commands";
 const editorView = inject("editorView");
 
 provide("callMenuCommand", callMenuCommand);

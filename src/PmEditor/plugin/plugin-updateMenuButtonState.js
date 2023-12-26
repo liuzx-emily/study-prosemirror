@@ -23,6 +23,8 @@ export const menuButtonState = reactive({
   setStateOfAllEmojisInTheSelectionToPic_disable: false,
   toggleHighlightEmoji_disable: false,
   toggleBold_active: false,
+  setHeading1_active: false,
+  setParagraph_active: false,
 });
 
 function updateMenuButtonState(view) {
@@ -34,6 +36,10 @@ function updateMenuButtonState(view) {
     !setStateOfAllEmojisInTheSelection("pic")(state);
   menuButtonState.toggleHighlightEmoji_disable = !toggleHighlightEmoji("pic")(state);
   menuButtonState.toggleBold_active = checkMarkActive(state, state.schema.marks.strong);
+  menuButtonState.setHeading1_active = checkNodeActive(state, state.schema.nodes.heading, {
+    level: 1,
+  });
+  menuButtonState.setParagraph_active = checkNodeActive(state, state.schema.nodes.paragraph);
 }
 
 /**
@@ -43,7 +49,7 @@ function updateMenuButtonState(view) {
  * @returns Boolean
  */
 function checkMarkActive(state, markType) {
-  let { from, $from, to, empty } = state.selection;
+  const { from, $from, to, empty } = state.selection;
   if (empty) {
     // 选区为空时，按钮的 active 状态代表：如果在光标位置输入文字，文字是否有该mark。下面用 bold 举例
 
@@ -79,4 +85,32 @@ function checkMarkActive(state, markType) {
   }
   // 选区有内容时，按钮的 active 状态代表：选区内是否有该mark。用 rangeHasMark
   return state.doc.rangeHasMark(from, to, markType);
+}
+
+/**
+ * node 类型的按钮用来判断 active（从 prosemirror-menu 包中复制过来的，原名为 blockTypeItem）
+ * @param {EditorState} state
+ * @param {NodeType} nodeType
+ * @param {Attrs} attrs
+ * @returns Boolean
+ */
+function checkNodeActive(state, nodeType, attrs) {
+  const { to, $from, node } = state.selection;
+  if (node) {
+    return node.hasMarkup(nodeType, attrs);
+  }
+  /* 
+  ResolvedPos 的方法中，有的方法、属性考虑 TextNode的，有的不考虑 TextNode。要万分小心
+  - start() end() before() after() node() 不考虑 TextNode
+  - nodeBefore nodeAfter 属性考虑 TextNode
+
+  
+  对于内容：<p>123<strong>456</strong>789</p>
+  当选区是567时，from是5(文本4和5之间），to是8（文本7和8之间）
+  $from.start()是1（文本1之前），$from.end()是10（文本9之后）
+
+  to<=$from.end()，说明选区在同一个非文本 node 中（比如同一个段落、同一个heading）
+  */
+
+  return to <= $from.end() && $from.parent.hasMarkup(nodeType, attrs);
 }

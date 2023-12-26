@@ -192,3 +192,21 @@ function checkMarkActive(state, markType) {
   return state.doc.rangeHasMark(from, to, markType);
 }
 ```
+
+### 标题、段落
+
+点击按钮：用 `prosemirror-commands` 包中的 `setBlockType`
+
+按钮是否 active：
+
+```js
+// 具体说明看源码，里面有详细的注释举例
+function checkNodeActive(state, nodeType, attrs) {
+  const { to, $from, node } = state.selection;
+  if (node) {
+    return node.hasMarkup(nodeType, attrs);
+  }
+  // to<=$from.end()，说明选区在同一个非文本 node 中（比如同一个段落、同一个heading）
+  return to <= $from.end() && $from.parent.hasMarkup(nodeType, attrs);
+}
+```
