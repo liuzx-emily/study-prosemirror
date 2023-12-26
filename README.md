@@ -157,3 +157,11 @@ dispatch(tr);
 ## 高亮 emoji
 
 使用 decorations 给 emoji 添加 `class:'highlight'`
+
+### 切换是否高亮
+
+plugin 中需要存储数据，记录是否高亮 —— 用 plugin 的 state 字段。
+
+在 decorations 中可以获取到 state 的值。如果是 true，就高亮。是 false，就不高亮。
+
+点击按钮“切换高亮”时，需要修改 state 的值。但是不要在外部直接修改，应该发消息给 plugin。让 plugin 内部自己修改 state 的值 —— 外部通过 `tr.setMeta(plugin,meta值)` 发消息。plugin 在 state - apply(tr) 中通过 `tr.getMeta(plugin)` 接受到 meta 值，并相应的去修改 state 数据。

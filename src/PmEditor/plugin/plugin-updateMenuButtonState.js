@@ -1,6 +1,10 @@
 import { Plugin } from "prosemirror-state";
 import { reactive } from "vue";
-import { toggleSelectedEmojiState, setStateOfAllEmojisInTheSelection } from "../command";
+import {
+  toggleSelectedEmojiState,
+  setStateOfAllEmojisInTheSelection,
+  toggleHighlightEmoji,
+} from "../command";
 
 export const plugin_updateMenuButtonState = new Plugin({
   view(view) {
@@ -16,6 +20,7 @@ export const plugin_updateMenuButtonState = new Plugin({
 export const menuButtonState = reactive({
   toggleSelectedEmojiStateButton_disable: false,
   setAllEmojisInSelectionToTextButton_disable: false,
+  toggleHighlightEmojiButton_disable: false,
 });
 
 function updateMenuButtonState(view) {
@@ -25,4 +30,5 @@ function updateMenuButtonState(view) {
     !setStateOfAllEmojisInTheSelection("text")(state);
   menuButtonState.setStateOfAllEmojisInTheSelectionToPicButton_disable =
     !setStateOfAllEmojisInTheSelection("pic")(state);
+  menuButtonState.toggleHighlightEmojiButton_disable = !toggleHighlightEmoji("pic")(state);
 }

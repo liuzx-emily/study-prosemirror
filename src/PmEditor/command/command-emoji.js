@@ -1,3 +1,5 @@
+import { pluginKey_highlightEmoji } from "../plugin/plugin-highlightEmoji";
+
 /**
  * 修改选中的 emoji 的状态
  * @param {'text'|'pic'} emojiState
@@ -8,15 +10,14 @@ export function changeSelectedEmojiState(emojiState) {
     const selectedEmoji = getSelectedEmoji(state);
     if (!selectedEmoji) {
       return false;
-    } else {
+    }
+    if (dispatch) {
       const pos = state.selection.from;
       // 用 setNodeAttribute 修改 attrs
       const tr = state.tr.setNodeAttribute(pos, "state", emojiState);
-      if (dispatch) {
-        dispatch(tr);
-      }
-      return true;
+      dispatch(tr);
     }
+    return true;
   };
 }
 
@@ -29,10 +30,9 @@ export function toggleSelectedEmojiState() {
     const selectedEmoji = getSelectedEmoji(state);
     if (!selectedEmoji) {
       return false;
-    } else {
-      const emojiState = selectedEmoji.attrs.state === "text" ? "pic" : "text";
-      return changeSelectedEmojiState(emojiState)(state, dispatch);
     }
+    const emojiState = selectedEmoji.attrs.state === "text" ? "pic" : "text";
+    return changeSelectedEmojiState(emojiState)(state, dispatch);
   };
 }
 
@@ -43,9 +43,9 @@ export function toggleSelectedEmojiState() {
  */
 export function insertEmoji(emojiType) {
   return function (state, dispatch) {
-    const newEmoji = state.schema.nodes.emoji.create({ type: emojiType });
-    const tr = state.tr.replaceSelectionWith(newEmoji);
     if (dispatch) {
+      const newEmoji = state.schema.nodes.emoji.create({ type: emojiType });
+      const tr = state.tr.replaceSelectionWith(newEmoji);
       dispatch(tr);
     }
     return true;
@@ -99,6 +99,35 @@ export function setStateOfAllEmojisInTheSelection(emojiState) {
       emojiNodes.forEach((emojiNode) => {
         tr.setNodeAttribute(emojiNode.pos, "state", emojiState);
       });
+      dispatch(tr);
+    }
+    return true;
+  };
+}
+
+/**
+ * 切换高亮文档中所有emoji
+ * @returns function(state,dispatch):true
+ */
+export function toggleHighlightEmoji() {
+  return function (state, dispatch) {
+    let hasEmoji = false;
+    state.doc.descendants((node) => {
+      if (hasEmoji) {
+        return;
+      }
+      if (node.type.name === "emoji") {
+        hasEmoji = true;
+      }
+    });
+    if (!hasEmoji) {
+      return false;
+    }
+    if (dispatch) {
+      // 通过 pluginKey 获取 pluginState
+      const pluginState = pluginKey_highlightEmoji.getState(state);
+      // 在 tr 上 setMeta。在 plugin-state-apply 中可以取到这里set的meta
+      const tr = state.tr.setMeta(pluginKey_highlightEmoji, !pluginState);
       dispatch(tr);
     }
     return true;

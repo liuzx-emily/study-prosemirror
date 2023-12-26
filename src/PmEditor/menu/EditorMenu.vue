@@ -19,6 +19,12 @@
       @click="callMenuCommand(setStateOfAllEmojisInTheSelection('pic'))"
       >将选区中所有emoji设为图像</a-button
     >
+    <a-button
+      title="切换高亮文档中所有emoji"
+      :disabled="menuButtonState.toggleHighlightEmojiButton_disable"
+      @click="callMenuCommand(toggleHighlightEmoji())"
+      >切换高亮emoji</a-button
+    >
   </section>
 </template>
 
@@ -26,7 +32,11 @@
 import { inject, provide } from "vue";
 import { menuButtonState } from "../plugin/plugin-updateMenuButtonState";
 import MenuInsertEmoji from "./MenuInsertEmoji.vue";
-import { toggleSelectedEmojiState, setStateOfAllEmojisInTheSelection } from "../command";
+import {
+  toggleSelectedEmojiState,
+  setStateOfAllEmojisInTheSelection,
+  toggleHighlightEmoji,
+} from "../command";
 
 const editorView = inject("editorView");
 
