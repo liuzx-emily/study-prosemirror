@@ -152,16 +152,43 @@ dispatch(tr);
 
 ### 使用 Plugin 的 view 属性去实时更新菜单按钮状态
 
+### 按钮点击事件用 @mousedown.prevent
+
+点击 menu button 时，不想丢失 editor 的 focus 状态，需要用 mousedown.prevent 代替 click
+
 ---
 
 ## 高亮 emoji
 
-使用 decorations 给 emoji 添加 `class:'highlight'`
+使用 `decorations` 给 emoji 添加 `class:'highlight'`
 
 ### 切换是否高亮
 
-plugin 中需要存储数据，记录是否高亮 —— 用 plugin 的 state 字段。
+plugin 中需要存储数据，记录是否高亮 —— 用 plugin 的 `state` 字段。
 
 在 decorations 中可以获取到 state 的值。如果是 true，就高亮。是 false，就不高亮。
 
 点击按钮“切换高亮”时，需要修改 state 的值。但是不要在外部直接修改，应该发消息给 plugin。让 plugin 内部自己修改 state 的值 —— 外部通过 `tr.setMeta(plugin,meta值)` 发消息。plugin 在 state - apply(tr) 中通过 `tr.getMeta(plugin)` 接受到 meta 值，并相应的去修改 state 数据。
+
+---
+
+## 常规文本编辑功能
+
+### 加粗
+
+点击按钮：用 `prosemirror-commands` 包中的 `toggleMark`
+按钮是否 active：
+
+```js
+// 具体说明看源码，里面有详细的注释举例
+function checkMarkActive(state, markType) {
+  let { from, $from, to, empty } = state.selection;
+  if (empty) {
+    // 选区为空时，按钮的 active 状态代表：如果在光标位置输入文字，文字是否有该mark
+    //  state.storedMarks 是针对下一次输入的特殊设定。$from.marks() 是周围环境的设定。
+    return !!markType.isInSet(state.storedMarks || $from.marks());
+  }
+  // 选区有内容时，按钮的 active 状态代表：选区内是否有该mark。用 rangeHasMark
+  return state.doc.rangeHasMark(from, to, markType);
+}
+```

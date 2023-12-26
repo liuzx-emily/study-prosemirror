@@ -2,16 +2,18 @@
   <a-popover trigger="click" v-model:open="visible">
     <template #content>
       <section class="emoji-container">
+        <!-- 在 img 上用 @mousedown.prevent，确保点击图片时不会丢失 editor 的焦点-->
         <img
           v-for="emoji in emojiList"
           :key="emoji.key"
           :src="emoji.imgUrl"
           :title="emoji.text"
-          @click="handleClick(emoji)"
+          @mousedown.prevent="handleClick(emoji)"
         />
       </section>
     </template>
-    <a-button title="在选中位置添加emoji">添加emoji</a-button>
+    <!-- 在触发popover的按钮上添加@mousedown.prevent，确保显示popover时不会丢失editor的焦点 -->
+    <a-button title="在选中位置添加emoji" @mousedown.prevent>添加emoji</a-button>
   </a-popover>
 </template>
 

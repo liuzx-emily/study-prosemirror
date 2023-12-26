@@ -1,6 +1,6 @@
 <template>
   <section id="content" style="display: none">
-    <p>小明：你喜欢吃什么水果？</p>
+    <p>小明：你<span style="font-weight: bold">喜欢</span>吃什么水果？</p>
     <p>小红：我喜欢 <span emoji-type="apple"></span>和<span emoji-type="banana"></span>。你呢？</p>
     <p>
       小明：我喜欢吃 <span emoji-type="pear"></span>、
