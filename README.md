@@ -210,3 +210,13 @@ function checkNodeActive(state, nodeType, attrs) {
   return to <= $from.end() && $from.parent.hasMarkup(nodeType, attrs);
 }
 ```
+
+---
+
+## word 列表
+
+schema 中 定义 nodes 的顺序很重要，决定匹配 dom 时的优先级。
+
+在视图变化时，去修改列表的序号和缩进，应该用 decorations。不能用 view-update，它不能用来修改编辑器内容。
+
+具体内容看 blog
