@@ -51,6 +51,13 @@
       @mousedown.prevent="callMenuCommand(setBlockType(editorView.state.schema.nodes.paragraph))"
       >P</a-button
     >
+    <a-button
+      title="列表"
+      :disabled="false"
+      :class="{ active: menuButtonState.setList_active }"
+      @mousedown.prevent="callMenuCommand(toggleWordList())"
+      >List</a-button
+    >
   </section>
 </template>
 
@@ -62,6 +69,7 @@ import {
   toggleSelectedEmojiState,
   setStateOfAllEmojisInTheSelection,
   toggleHighlightEmoji,
+  toggleWordList,
 } from "../command";
 import { toggleMark, setBlockType } from "prosemirror-commands";
 const editorView = inject("editorView");

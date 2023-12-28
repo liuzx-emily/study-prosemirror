@@ -177,7 +177,9 @@ plugin 中需要存储数据，记录是否高亮 —— 用 plugin 的 `state` 
 ### 加粗
 
 点击按钮：用 `prosemirror-commands` 包中的 `toggleMark`
-按钮是否 active：
+按钮是否 active，参考 @tiptap/core 的 `isMarkActive` 方法
+
+下面的是 prosemirror 提供的方法，因为和想要的效果不符，本项目中现在不再使用了：
 
 ```js
 // 具体说明看源码，里面有详细的注释举例
@@ -197,7 +199,9 @@ function checkMarkActive(state, markType) {
 
 点击按钮：用 `prosemirror-commands` 包中的 `setBlockType`
 
-按钮是否 active：
+按钮是否 active，参考 @tiptap/core 的 `isNodeActive` 方法
+
+下面的是 prosemirror 提供的方法，因为和想要的效果不符，本项目中现在不再使用了：
 
 ```js
 // 具体说明看源码，里面有详细的注释举例

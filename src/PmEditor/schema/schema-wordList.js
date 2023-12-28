@@ -5,7 +5,7 @@ export const wordList = {
     listItemLevel: "",
   },
   group: "block",
-  content: "inline*",
+  content: "inline*", // TODO 列表项可以设置为标题1
   parseDOM: [
     {
       tag: "p[list-id][list-item-level]",
