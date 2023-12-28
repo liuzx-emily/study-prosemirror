@@ -77,7 +77,7 @@
 
 <script setup>
 import { inject, provide } from "vue";
-import { menuButtonState } from "../plugin/plugin-menuButtonState";
+import { menuButtonState } from "../../plugin/plugin-menuButtonState";
 import MenuInsertEmoji from "./MenuInsertEmoji.vue";
 import {
   toggleSelectedEmojiState,
@@ -86,7 +86,7 @@ import {
   toggleWordList,
   liftWordListItem,
   sinkWordListItem,
-} from "../command";
+} from "../../command";
 import { toggleMark, setBlockType } from "prosemirror-commands";
 const editorView = inject("editorView");
 

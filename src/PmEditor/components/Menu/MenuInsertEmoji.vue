@@ -18,9 +18,9 @@
 </template>
 
 <script setup>
-import { emojiMap } from "../schema/schema-emoji";
+import { emojiMap } from "../../schema/schema-emoji";
 import { inject, ref } from "vue";
-import { insertEmoji } from "../command";
+import { insertEmoji } from "../../command";
 
 const callMenuCommand = inject("callMenuCommand");
 

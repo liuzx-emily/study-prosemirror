@@ -35,10 +35,10 @@ import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { exampleSetup } from "prosemirror-example-setup";
 import schema from "./schema"; // step1 创建schema
-import EditorMenu from "./menu/EditorMenu.vue";
+import EditorMenu from "./components/Menu/EditorMenu.vue";
 import { plugin_menuButtonState } from "./plugin/plugin-menuButtonState";
 import { plugin_highlightEmoji } from "./plugin/plugin-highlightEmoji";
-import { plugin_updateWordListNumber } from "./plugin/plugin-updateWordListNumber";
+import { plugin_wordListNumber } from "./plugin/plugin-wordListNumber";
 import "../assets/editor.css";
 
 const editorView = shallowRef(); // vue3中必须用shallowRef。如果用ref，会报错 Applying a mismatched transaction
@@ -52,7 +52,7 @@ onMounted(() => {
     plugins: exampleSetup({ schema, menuBar: false }).concat([
       plugin_menuButtonState,
       plugin_highlightEmoji,
-      plugin_updateWordListNumber,
+      plugin_wordListNumber,
     ]),
   });
   // step3 由 state 创建 view（因为使用了dom元素，所以必须放在onMounted中）

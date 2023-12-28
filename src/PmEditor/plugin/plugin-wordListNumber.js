@@ -1,7 +1,7 @@
 import { Plugin } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
 
-export const plugin_updateWordListNumber = new Plugin({
+export const plugin_wordListNumber = new Plugin({
   props: {
     decorations(state) {
       const decos = [];
