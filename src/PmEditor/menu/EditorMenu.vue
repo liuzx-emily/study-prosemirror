@@ -35,6 +35,7 @@
       @mousedown.prevent="callMenuCommand(toggleMark(editorView.state.schema.marks.strong))"
       >B</a-button
     >
+    <i class="divider"></i>
     <a-button
       title="标题1"
       :disabled="false"
@@ -51,6 +52,7 @@
       @mousedown.prevent="callMenuCommand(setBlockType(editorView.state.schema.nodes.paragraph))"
       >P</a-button
     >
+    <i class="divider"></i>
     <a-button
       title="列表"
       :disabled="false"
@@ -58,18 +60,32 @@
       @mousedown.prevent="callMenuCommand(toggleWordList())"
       >List</a-button
     >
+    <a-button
+      title="列表->"
+      :disabled="menuButtonState.sinkWordListItem_disable"
+      @mousedown.prevent="callMenuCommand(sinkWordListItem())"
+      >-></a-button
+    >
+    <a-button
+      title="列表<-"
+      :disabled="menuButtonState.liftWordListItem_disable"
+      @mousedown.prevent="callMenuCommand(liftWordListItem())"
+      >&lt;-</a-button
+    >
   </section>
 </template>
 
 <script setup>
 import { inject, provide } from "vue";
-import { menuButtonState } from "../plugin/plugin-updateMenuButtonState";
+import { menuButtonState } from "../plugin/plugin-menuButtonState";
 import MenuInsertEmoji from "./MenuInsertEmoji.vue";
 import {
   toggleSelectedEmojiState,
   setStateOfAllEmojisInTheSelection,
   toggleHighlightEmoji,
   toggleWordList,
+  liftWordListItem,
+  sinkWordListItem,
 } from "../command";
 import { toggleMark, setBlockType } from "prosemirror-commands";
 const editorView = inject("editorView");
@@ -92,6 +108,15 @@ function callMenuCommand(command) {
   }
   .ant-btn + .ant-btn {
     margin-left: 4px;
+  }
+  i.divider {
+    width: 1px;
+    height: 16px;
+    background: #d9d9d9;
+    display: inline-block;
+    margin: 0 10px;
+    position: relative;
+    top: 4px;
   }
 }
 </style>

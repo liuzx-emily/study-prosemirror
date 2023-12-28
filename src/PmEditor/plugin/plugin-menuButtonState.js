@@ -4,6 +4,8 @@ import {
   toggleSelectedEmojiState,
   setStateOfAllEmojisInTheSelection,
   toggleHighlightEmoji,
+  liftWordListItem,
+  sinkWordListItem,
 } from "../command";
 import { isNodeActive, isMarkActive } from "../utils/tiptap-isActive";
 /* 为什么不用 prosemirror 提供的两个方法：
@@ -11,7 +13,7 @@ import { isNodeActive, isMarkActive } from "../utils/tiptap-isActive";
   checkMarkActive 在选区不为空时使用 rangeHasMark 判断。会导致选区中既有带 mark 的内容也有不带 mark 的内容时，仍会返回 true，和想要的效果不符。
 */
 // import { checkNodeActive, checkMarkActive } from "../utils/prosemirror-isActive";
-export const plugin_updateMenuButtonState = new Plugin({
+export const plugin_menuButtonState = new Plugin({
   view(view) {
     updateMenuButtonState(view);
     return {
@@ -31,6 +33,8 @@ export const menuButtonState = reactive({
   setHeading1_active: false,
   setParagraph_active: false,
   setList_active: false,
+  liftWordListItem_disable: false,
+  sinkWordListItem_disable: false,
 });
 
 function updateMenuButtonState(view) {
@@ -47,4 +51,6 @@ function updateMenuButtonState(view) {
   });
   menuButtonState.setParagraph_active = isNodeActive(state, state.schema.nodes.paragraph);
   menuButtonState.setList_active = isNodeActive(state, state.schema.nodes.wordList);
+  menuButtonState.liftWordListItem_disable = !liftWordListItem()(state);
+  menuButtonState.sinkWordListItem_disable = !sinkWordListItem()(state);
 }

@@ -1,7 +1,6 @@
 import { setBlockType } from "prosemirror-commands";
 import { isNodeActive } from "../utils/tiptap-isActive";
 
-let index = 100;
 export function toggleWordList() {
   return function (state, dispatch) {
     const wordListType = state.schema.nodes.wordList;
@@ -23,8 +22,58 @@ export function toggleWordList() {
         listId = nextLevelOneNode.attrs.listId;
         return setBlockType(wordListType, { listId, listItemLevel: 0 })(state, dispatch);
       }
-      return setBlockType(wordListType, { listId: index++, listItemLevel: 0 })(state, dispatch);
+      return setBlockType(wordListType, { listId: guid(), listItemLevel: 0 })(state, dispatch);
     }
+  };
+}
+
+export function liftWordListItem() {
+  return function (state, dispatch) {
+    const wordListType = state.schema.nodes.wordList;
+    const { from, to } = state.selection;
+    const nodes = [];
+    state.doc.nodesBetween(from, to, (node, pos) => {
+      if (node.type === wordListType && node.attrs.listItemLevel > 0) {
+        nodes.push({ node, pos });
+      }
+    });
+    if (nodes.length === 0) {
+      return false;
+    }
+    if (dispatch) {
+      const tr = state.tr;
+      nodes.forEach(({ node, pos }) => {
+        const level = node.attrs.listItemLevel - 1;
+        tr.setNodeAttribute(pos, "listItemLevel", level);
+      });
+      dispatch(tr);
+    }
+    return true;
+  };
+}
+
+export function sinkWordListItem() {
+  return function (state, dispatch) {
+    const wordListType = state.schema.nodes.wordList;
+    const { from, to } = state.selection;
+    const nodes = [];
+    state.doc.nodesBetween(from, to, (node, pos) => {
+      if (node.type === wordListType && node.attrs.listItemLevel < 5) {
+        nodes.push({ node, pos });
+      }
+    });
+    if (nodes.length === 0) {
+      return false;
+    }
+    if (dispatch) {
+      const tr = state.tr;
+      nodes.forEach(({ node, pos }) => {
+        const level = node.attrs.listItemLevel + 1;
+        tr.setNodeAttribute(pos, "listItemLevel", level);
+      });
+      dispatch(tr);
+    }
+    return true;
   };
 }
 
@@ -55,4 +104,12 @@ function getNextLevelOneNode(state, $pos) {
     return state.doc.child(levelOneNodeIndex + 1);
   }
   return null;
+}
+
+function guid() {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c == "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
 }

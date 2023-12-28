@@ -22,6 +22,7 @@ export const plugin_updateWordListNumber = new Plugin({
  * @param {Node} doc doc节点
  * @param {Function} handler function(node,pos,numberArr)
  */
+// TODO 列表中的第一项level不是0时，序号算的不对
 function processDoc_getListNumber(doc, handler) {
   const listMap = new Map();
   doc.descendants((node, pos) => {

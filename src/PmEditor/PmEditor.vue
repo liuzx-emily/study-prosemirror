@@ -36,7 +36,7 @@ import { EditorView } from "prosemirror-view";
 import { exampleSetup } from "prosemirror-example-setup";
 import schema from "./schema"; // step1 创建schema
 import EditorMenu from "./menu/EditorMenu.vue";
-import { plugin_updateMenuButtonState } from "./plugin/plugin-updateMenuButtonState";
+import { plugin_menuButtonState } from "./plugin/plugin-menuButtonState";
 import { plugin_highlightEmoji } from "./plugin/plugin-highlightEmoji";
 import { plugin_updateWordListNumber } from "./plugin/plugin-updateWordListNumber";
 import "../assets/editor.css";
@@ -50,7 +50,7 @@ onMounted(() => {
     doc: DOMParser.fromSchema(schema).parse(document.querySelector("#content")),
     // exampleSetup提供了input rules、keymaps、cursor、history、menu等插件。不需要它提供的菜单，通过menuBar:false关闭
     plugins: exampleSetup({ schema, menuBar: false }).concat([
-      plugin_updateMenuButtonState,
+      plugin_menuButtonState,
       plugin_highlightEmoji,
       plugin_updateWordListNumber,
     ]),
@@ -89,13 +89,10 @@ onMounted(() => {
       }
     }
     // word list
-    p[list-id][list-item-level] {
-      background: #f5f5f5;
-    }
-    p::before {
+    p[list-id][list-item-level]::before {
       display: inline;
       content: attr(list-item-number);
-      margin-right: 4px;
+      margin-right: 8px;
     }
   }
 }

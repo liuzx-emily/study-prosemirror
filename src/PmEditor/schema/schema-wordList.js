@@ -12,7 +12,7 @@ export const wordList = {
       getAttrs(dom) {
         return {
           listId: dom.getAttribute("list-id"),
-          listItemLevel: dom.getAttribute("list-item-level"),
+          listItemLevel: parseInt(dom.getAttribute("list-item-level")),
         };
       },
     },
