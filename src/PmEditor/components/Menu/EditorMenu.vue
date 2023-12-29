@@ -38,6 +38,12 @@
     <a-button title="加粗" :disabled="false" @mousedown.prevent="emit('insert-link')"
       >插入链接</a-button
     >
+    <a-button
+      title="移除选区中的所有链接"
+      :disabled="menuButtonState.removeAllLinksInSelection_disable"
+      @mousedown.prevent="callMenuCommand(removeAllLinksInSelection())"
+      >移除链接</a-button
+    >
     <i class="divider"></i>
     <a-button
       title="标题1"
@@ -89,6 +95,7 @@ import {
   toggleWordList,
   liftWordListItem,
   sinkWordListItem,
+  removeAllLinksInSelection,
 } from "../../command";
 import { toggleMark, setBlockType } from "prosemirror-commands";
 const emit = defineEmits(["insert-link"]);

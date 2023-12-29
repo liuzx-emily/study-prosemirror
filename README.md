@@ -230,3 +230,19 @@ schema 中 定义 nodes 的顺序很重要，决定匹配 dom 时的优先级。
 ## link
 
 看 blog
+
+### 判断 pos 所在位置是不是 link
+
+`!linkMarkType.isInSet($pos.marks()`
+
+### 若 pos 所在位置是一个 TextNode，获取 TextNode 的起始位置和结束位置：
+
+```js
+// 当 $pos 在文本节点中时，$pos.textOffset =  $pos.pos - 文本节点起始位置。所以文本节点起始位置 = $pos.pos - $pos.textOffset
+const start = pos - $pos.textOffset;
+const linkNode = state.doc.nodeAt(pos); // // $pos.node 不能找 TextNode。要用 nodeAt
+// const linkNode = $pos.parent.maybeChild($pos.index()); // 这样也可以找到 TextNode
+const end = start + linkNode.nodeSize;
+```
+
+---

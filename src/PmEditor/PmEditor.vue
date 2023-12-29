@@ -24,7 +24,12 @@
     <p list-id="1" list-item-level="1">在这里看到的是天王星每张图片中中心右侧的一个浅色的点。</p>
     <p list-id="1" list-item-level="5">这些图像使用的是波长为K、Ka和Q的波段，</p>
     <h1>link</h1>
-    <p>123<a href="http://www.baidu.com">AAAAAAA</a>123</p>
+    <p>
+      123<a href="http://www.baidu.com">AAAAAAA</a>123。你好啊，吃了吗？去<a
+        href="http://www.abc.com"
+        >食堂</a
+      >吗？
+    </p>
     <p>222<a href="http://www.bing.com">BBB</a>222</p>
   </section>
   <EditorMenu @insert-link="insertLink" />
@@ -104,6 +109,8 @@ onMounted(() => {
 <style lang="scss">
 #editor {
   position: relative;
+  height: 400px;
+  overflow: auto;
   .ProseMirror {
     // link
     a {

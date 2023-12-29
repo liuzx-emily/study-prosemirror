@@ -6,6 +6,7 @@ import {
   toggleHighlightEmoji,
   liftWordListItem,
   sinkWordListItem,
+  removeAllLinksInSelection,
 } from "../command";
 import { isNodeActive, isMarkActive } from "../utils/tiptap-isActive";
 /* 为什么不用 prosemirror 提供的两个方法：
@@ -30,6 +31,7 @@ export const menuButtonState = reactive({
   setStateOfAllEmojisInTheSelectionToPic_disable: false,
   toggleHighlightEmoji_disable: false,
   toggleBold_active: false,
+  removeAllLinksInSelection_disable: false,
   setHeading1_active: false,
   setParagraph_active: false,
   setList_active: false,
@@ -46,6 +48,7 @@ function updateMenuButtonState(view) {
     !setStateOfAllEmojisInTheSelection("pic")(state);
   menuButtonState.toggleHighlightEmoji_disable = !toggleHighlightEmoji("pic")(state);
   menuButtonState.toggleBold_active = isMarkActive(state, state.schema.marks.strong);
+  menuButtonState.removeAllLinksInSelection_disable = !removeAllLinksInSelection()(state);
   menuButtonState.setHeading1_active = isNodeActive(state, state.schema.nodes.heading, {
     level: 1,
   });
