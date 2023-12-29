@@ -23,27 +23,67 @@
     </p>
     <p list-id="1" list-item-level="1">在这里看到的是天王星每张图片中中心右侧的一个浅色的点。</p>
     <p list-id="1" list-item-level="5">这些图像使用的是波长为K、Ka和Q的波段，</p>
+    <h1>link</h1>
+    <p>123<a href="http://www.baidu.com">AAAAAAA</a>123</p>
+    <p>222<a href="http://www.bing.com">BBB</a>222</p>
   </section>
-  <EditorMenu />
-  <section id="editor"></section>
+  <EditorMenu @insert-link="insertLink" />
+  <section id="editor">
+    <LinkHoverToolbar ref="LinkHoverToolbarRef" @edit-link="hoverToolbarCallEditLink" />
+    <LinkSettingsPanel ref="LinkSettingsPanelRef" />
+  </section>
 </template>
 
 <script setup>
-import { onMounted, provide, shallowRef } from "vue";
+import { ref, onMounted, provide, shallowRef } from "vue";
 import { DOMParser } from "prosemirror-model";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { exampleSetup } from "prosemirror-example-setup";
 import schema from "./schema"; // step1 创建schema
 import EditorMenu from "./components/Menu/EditorMenu.vue";
+import LinkHoverToolbar from "./components/Link/LinkHoverToolbar.vue";
+import LinkSettingsPanel from "./components/Link/LinkSettingsPanel.vue";
 import { plugin_menuButtonState } from "./plugin/plugin-menuButtonState";
 import { plugin_highlightEmoji } from "./plugin/plugin-highlightEmoji";
 import { plugin_wordListNumber } from "./plugin/plugin-wordListNumber";
+import { usePlugin_linkHoverToolbar } from "./plugin/plugin-linkHoverToolbar";
 import "../assets/editor.css";
 
 const editorView = shallowRef(); // vue3中必须用shallowRef。如果用ref，会报错 Applying a mismatched transaction
 provide("editorView", editorView);
 
+// link
+const LinkHoverToolbarRef = ref();
+const LinkSettingsPanelRef = ref();
+const plugin_linkHoverToolbar = usePlugin_linkHoverToolbar(
+  LinkHoverToolbarRef,
+  LinkSettingsPanelRef
+);
+function hoverToolbarCallEditLink({ left, top, text, link, from, to }) {
+  LinkSettingsPanelRef.value.showSettingsPanel({
+    left,
+    top,
+    text,
+    link,
+    from,
+    to,
+  });
+}
+function insertLink() {
+  const state = editorView.value.state;
+  const { from, to } = state.selection;
+  const { left, top } = editorView.value.coordsAtPos(from);
+  const selectionFragment = state.doc.cut(from, to);
+  LinkSettingsPanelRef.value.showSettingsPanel({
+    left: left - 10,
+    top: top - 10,
+    text: selectionFragment.textContent,
+    link: "",
+    from,
+    to,
+  });
+}
 onMounted(() => {
   // step2 由schema创建state（因为使用了dom元素，所以必须放在onMounted中）
   const state = EditorState.create({
@@ -53,6 +93,7 @@ onMounted(() => {
       plugin_menuButtonState,
       plugin_highlightEmoji,
       plugin_wordListNumber,
+      plugin_linkHoverToolbar,
     ]),
   });
   // step3 由 state 创建 view（因为使用了dom元素，所以必须放在onMounted中）
@@ -62,10 +103,15 @@ onMounted(() => {
 </script>
 <style lang="scss">
 #editor {
+  position: relative;
   .ProseMirror {
-    min-height: 400px;
-    outline: 1px solid #aaa;
-
+    // link
+    a {
+      color: #4299e1;
+    }
+    a:hover {
+      color: #24659b;
+    }
     // emoji
     span[emoji-type][emoji-state="pic"] {
       img {

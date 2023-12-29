@@ -35,6 +35,9 @@
       @mousedown.prevent="callMenuCommand(toggleMark(editorView.state.schema.marks.strong))"
       >B</a-button
     >
+    <a-button title="加粗" :disabled="false" @mousedown.prevent="emit('insert-link')"
+      >插入链接</a-button
+    >
     <i class="divider"></i>
     <a-button
       title="标题1"
@@ -88,6 +91,7 @@ import {
   sinkWordListItem,
 } from "../../command";
 import { toggleMark, setBlockType } from "prosemirror-commands";
+const emit = defineEmits(["insert-link"]);
 const editorView = inject("editorView");
 
 provide("callMenuCommand", callMenuCommand);
