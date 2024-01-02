@@ -16,7 +16,7 @@ framework 选择 `Vue`，variant 选择 `JavaScript`
 
 ### 安装 ui library
 
-`pnpm i ant-design-vue`
+`pnpm i ant-design-vue @ant-design/icons-vue`
 
 `pnpm i unplugin-vue-components -D`
 

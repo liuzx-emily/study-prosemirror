@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
     "ant-design-vue": "^4.0.8",
     "prosemirror-commands": "^1.5.2",
     "prosemirror-example-setup": "^1.2.2",

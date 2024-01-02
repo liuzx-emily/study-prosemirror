@@ -33,11 +33,11 @@
       :disabled="false"
       :class="{ active: menuButtonState.toggleBold_active }"
       @mousedown.prevent="callMenuCommand(toggleMark(editorView.state.schema.marks.strong))"
-      >B</a-button
-    >
+      ><BoldOutlined
+    /></a-button>
     <a-button title="加粗" :disabled="false" @mousedown.prevent="emit('insert-link')"
-      >插入链接</a-button
-    >
+      ><LinkOutlined
+    /></a-button>
     <a-button
       title="移除选区中的所有链接"
       :disabled="menuButtonState.removeAllLinksInSelection_disable"
@@ -67,20 +67,23 @@
       :disabled="false"
       :class="{ active: menuButtonState.setList_active }"
       @mousedown.prevent="callMenuCommand(toggleWordList())"
-      >List</a-button
-    >
+      ><OrderedListOutlined
+    /></a-button>
     <a-button
       title="列表->"
       :disabled="menuButtonState.sinkWordListItem_disable"
       @mousedown.prevent="callMenuCommand(sinkWordListItem())"
-      >-></a-button
-    >
+      ><MenuUnfoldOutlined
+    /></a-button>
     <a-button
       title="列表<-"
       :disabled="menuButtonState.liftWordListItem_disable"
       @mousedown.prevent="callMenuCommand(liftWordListItem())"
-      >&lt;-</a-button
-    >
+      ><MenuFoldOutlined
+    /></a-button>
+  </section>
+  <section>
+    <MenuSearch />
   </section>
 </template>
 
@@ -88,6 +91,7 @@
 import { inject, provide } from "vue";
 import { menuButtonState } from "../../plugin/plugin-menuButtonState";
 import MenuInsertEmoji from "./MenuInsertEmoji.vue";
+import MenuSearch from "./MenuSearch.vue";
 import {
   toggleSelectedEmojiState,
   setStateOfAllEmojisInTheSelection,
@@ -98,6 +102,14 @@ import {
   removeAllLinksInSelection,
 } from "../../command";
 import { toggleMark, setBlockType } from "prosemirror-commands";
+import {
+  BoldOutlined,
+  LinkOutlined,
+  OrderedListOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+} from "@ant-design/icons-vue";
+
 const emit = defineEmits(["insert-link"]);
 const editorView = inject("editorView");
 

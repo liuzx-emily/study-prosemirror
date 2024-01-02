@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@ant-design/icons-vue': ^7.0.1
   '@vitejs/plugin-vue': ^4.5.2
   ant-design-vue: ^4.0.8
   eslint: ^8.56.0
@@ -21,6 +22,7 @@ specifiers:
   vue: ^3.3.11
 
 dependencies:
+  '@ant-design/icons-vue': registry.npmmirror.com/@ant-design/icons-vue/7.0.1_vue@3.3.13
   ant-design-vue: registry.npmmirror.com/ant-design-vue/4.0.8_vue@3.3.13
   prosemirror-commands: registry.npmmirror.com/prosemirror-commands/1.5.2
   prosemirror-example-setup: registry.npmmirror.com/prosemirror-example-setup/1.2.2
