@@ -30,14 +30,11 @@
   <section>
     <a-button
       title="加粗"
-      :disabled="false"
       :class="{ active: menuButtonState.toggleBold_active }"
       @mousedown.prevent="callMenuCommand(toggleMark(editorView.state.schema.marks.strong))"
       ><BoldOutlined
     /></a-button>
-    <a-button title="加粗" :disabled="false" @mousedown.prevent="emit('insert-link')"
-      ><LinkOutlined
-    /></a-button>
+    <a-button title="加粗" @mousedown.prevent="emit('insert-link')"><LinkOutlined /></a-button>
     <a-button
       title="移除选区中的所有链接"
       :disabled="menuButtonState.removeAllLinksInSelection_disable"
@@ -47,7 +44,6 @@
     <i class="divider"></i>
     <a-button
       title="标题1"
-      :disabled="false"
       :class="{ active: menuButtonState.setHeading1_active }"
       @mousedown.prevent="
         callMenuCommand(setBlockType(editorView.state.schema.nodes.heading, { level: 1 }))
@@ -56,7 +52,6 @@
     >
     <a-button
       title="段落"
-      :disabled="false"
       :class="{ active: menuButtonState.setParagraph_active }"
       @mousedown.prevent="callMenuCommand(setBlockType(editorView.state.schema.nodes.paragraph))"
       >P</a-button
@@ -64,7 +59,6 @@
     <i class="divider"></i>
     <a-button
       title="列表"
-      :disabled="false"
       :class="{ active: menuButtonState.setList_active }"
       @mousedown.prevent="callMenuCommand(toggleWordList())"
       ><OrderedListOutlined
@@ -81,8 +75,7 @@
       @mousedown.prevent="callMenuCommand(liftWordListItem())"
       ><MenuFoldOutlined
     /></a-button>
-  </section>
-  <section>
+    <i class="divider"></i>
     <MenuSearch />
   </section>
 </template>
@@ -112,11 +105,7 @@ import {
 
 const emit = defineEmits(["insert-link"]);
 const editorView = inject("editorView");
-
-provide("callMenuCommand", callMenuCommand);
-function callMenuCommand(command) {
-  return command(editorView.value.state, editorView.value.dispatch);
-}
+const callMenuCommand = inject("callMenuCommand");
 </script>
 <style lang="scss" scoped>
 :deep() {

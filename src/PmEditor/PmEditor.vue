@@ -29,6 +29,7 @@
     <p>222<a href="http://www.bing.com">BBB</a>你好，222</p>
   </section>
   <EditorMenu @insert-link="insertLink" />
+  <Search ref="SearchRef" />
   <section id="editor">
     <LinkHoverToolbar ref="LinkHoverToolbarRef" @edit-link="hoverToolbarCallEditLink" />
     <LinkSettingsPanel ref="LinkSettingsPanelRef" />
@@ -45,10 +46,22 @@ import schema from "./schema"; // step1 创建schema
 import EditorMenu from "./components/Menu/EditorMenu.vue";
 import LinkHoverToolbar from "./components/Link/LinkHoverToolbar.vue";
 import LinkSettingsPanel from "./components/Link/LinkSettingsPanel.vue";
+import Search from "./components/Search/Search.vue";
 import { plugin_menuButtonState } from "./plugin/plugin-menuButtonState";
 import { plugin_highlightEmoji } from "./plugin/plugin-highlightEmoji";
 import { plugin_wordListNumber } from "./plugin/plugin-wordListNumber";
 import { usePlugin_linkHoverToolbar } from "./plugin/plugin-linkHoverToolbar";
+import {
+  plugin_search,
+  find,
+  findNext,
+  findPrev,
+  replace,
+  replaceAll,
+  reset,
+  count,
+  activeIndex,
+} from "./plugin/plugin-search";
 import "../assets/editor.css";
 
 const editorView = shallowRef(); // vue3中必须用shallowRef。如果用ref，会报错 Applying a mismatched transaction
@@ -85,6 +98,22 @@ function insertLink() {
     to,
   });
 }
+
+// search and replace
+const SearchRef = ref();
+function showSearchPopper() {
+  SearchRef.value.showPopper();
+}
+provide("showSearchPopper", showSearchPopper);
+provide("find", find);
+provide("findNext", findNext);
+provide("findPrev", findPrev);
+provide("replace", replace);
+provide("replaceAll", replaceAll);
+provide("reset", reset);
+provide("count", count);
+provide("activeIndex", activeIndex);
+
 onMounted(() => {
   // step2 由schema创建state（因为使用了dom元素，所以必须放在onMounted中）
   const state = EditorState.create({
@@ -95,12 +124,18 @@ onMounted(() => {
       plugin_highlightEmoji,
       plugin_wordListNumber,
       plugin_linkHoverToolbar,
+      plugin_search,
     ]),
   });
   // step3 由 state 创建 view（因为使用了dom元素，所以必须放在onMounted中）
   editorView.value = new EditorView(document.querySelector("#editor"), { state });
   window.view = editorView.value;
 });
+
+provide("callMenuCommand", callMenuCommand);
+function callMenuCommand(command) {
+  return command(editorView.value.state, editorView.value.dispatch);
+}
 </script>
 <style lang="scss">
 #editor {
