@@ -1,6 +1,6 @@
 import { Plugin } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
-import { ref, computed } from "vue";
+import { computed, ref } from "vue";
 
 const searchText = ref("");
 const results = ref([]); //[{from:Number,to:Number}]
@@ -14,10 +14,8 @@ export const count = computed(() => {
 export const activeIndex = ref(0); // 从0计数
 
 function scrollToActiveResult() {
-  const pos = results.value[activeIndex.value]?.from;
-  if (pos) {
-    scrollIntoViewByPmPos(pos);
-  }
+  const node = document.querySelector(".active-find");
+  node?.scrollIntoView();
 }
 
 export function find(text) {
@@ -28,14 +26,14 @@ export function find(text) {
     activeIndex.value = 0;
     searchText.value = text;
     dispatch(state.tr); // 为了触发deco更新手动派发tr
-    scrollToActiveResult(); // 上一行 dispatch(tr) 后同步调用 decorations()。所以走到本行时，results 和 activeIndex 都已经在 decorations 中算好了，是最新的，可以放心用。
+    scrollToActiveResult(); // dispatch(tr)内都是同步调用，所以走到这里页面已经更新好了，可以放心找 document.querySelector(".active-find")
   };
 }
 
 export function findNext() {
   return (state, dispatch) => {
     activeIndex.value += 1; // 越界问题不在这处理，放在重新计算results后
-    dispatch(state.tr); // 为了触发deco更新手动派发tr
+    dispatch(state.tr);
     scrollToActiveResult();
   };
 }
@@ -79,13 +77,13 @@ export function replaceAll(replaceText) {
 
     return offset;
   }
-  return ({ tr }, dispatch) => {
+  return (state, dispatch) => {
     let offset;
 
     if (!results.value.length) {
       return;
     }
-
+    const tr = state.tr;
     results.value.forEach(({ from, to }, index) => {
       tr.insertText(replaceText, from, to);
       offset = rebaseNextResult(replaceText, index, offset);
@@ -177,14 +175,4 @@ function searchDoc(doc, searchText) {
     }
   });
   return res;
-}
-/**
- * 根据 pm pos 滚动
- * @param {number} pos
- */
-function scrollIntoViewByPmPos(pos) {
-  const { node } = window.view.domAtPos(pos);
-  if (node) {
-    node.scrollIntoView?.(false);
-  }
 }
