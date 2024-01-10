@@ -22,7 +22,6 @@ export const plugin_wordListNumber = new Plugin({
  * @param {Node} doc doc节点
  * @param {Function} handler function(node,pos,numberArr)
  */
-// TODO 列表中的第一项level不是0时，序号算的不对
 function processDoc_getListNumber(doc, handler) {
   const listMap = new Map();
   doc.descendants((node, pos) => {
@@ -47,10 +46,17 @@ function processDoc_getListNumber(doc, handler) {
   }
   // 补齐可能缺少的层级
   function patchMissingLevels(arr) {
+    // 如果第一个列表项的level不是0，需要在前面补齐.比如：第一个是 level3，则需要在最前面补 level0 level1 level2
+    const firstItemLevel = arr[0]?.level;
+    if (firstItemLevel > 0) {
+      for (let i = firstItemLevel; i >= 0; i--) {
+        arr.splice(0, 0, { level: i });
+      }
+    }
+    // 补齐中间的跳级 比如：level2的下一个是level5，则需要在中间把 level3 level4 补齐
     for (var i = 0; i < arr.length - 1; i++) {
       var level1 = arr[i].level;
       var level2 = arr[i + 1].level;
-
       if (level1 + 1 < level2) {
         var newLevel = level1 + 1;
         var newItem = { level: newLevel };
