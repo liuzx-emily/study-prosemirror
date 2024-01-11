@@ -8,7 +8,6 @@ export function toggleWordList() {
       const paragraphType = state.schema.nodes.paragraph;
       return setBlockType(paragraphType)(state, dispatch);
     } else {
-      // TODO 当选区中既有列表又有普通段落时，不应该修改选区内列表的 listId 和 listItemLevel
       // 根据上下文获取 listId：先看前一个一级节点是不是列表；若不是，再看后一个一级节点是不是列表
       let listId;
       const { $from, $to } = state.selection;
@@ -23,6 +22,18 @@ export function toggleWordList() {
         return setBlockType(wordListType, { listId, listItemLevel: 0 })(state, dispatch);
       }
       return setBlockType(wordListType, { listId: guid(), listItemLevel: 0 })(state, dispatch);
+      /**
+       * 这段代码存在一个小问题：当选区中既有列表又有段落时，列表项的 listId 和 listItemLevel 也会被重新设置。
+       *
+       * 为了解决这个问题，我不对选区整体设置 setBlockType。而是找到选区中的非列表项（p h1），逐一计算 listId、执行 tr.setBlockType()。
+       *
+       * 但这样改完遇到更棘手的问题：假定文档为 p1+(p2+p3+p4+l1)+l2，括号内是选区
+       * 先找到p2，发现前后都不是列表，所以p2属于新列表
+       * 再找到p3，虽然给p2设置了 tr.setBlockType，但是还没有dispatch(tr)。p3不知道p2将会变为列表，所以p3又属于一个新新列表
+       * 再找到p4，同理它也不知道p3将变为列表，它向后看发现l1是列表，所以p4和l1同属一个列表
+       *
+       * 暂时没想好怎么解决，还是先整体设置 setBlockType 吧。
+       */
     }
   };
 }
