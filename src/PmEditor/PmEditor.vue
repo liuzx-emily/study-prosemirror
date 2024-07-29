@@ -37,32 +37,34 @@
 </template>
 
 <script setup>
-import { ref, onMounted, provide, shallowRef } from "vue";
+import { exampleSetup } from "prosemirror-example-setup";
+import { keymap } from "prosemirror-keymap";
 import { DOMParser } from "prosemirror-model";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
-import { exampleSetup } from "prosemirror-example-setup";
-import schema from "./schema"; // step1 创建schema
-import EditorMenu from "./components/Menu/EditorMenu.vue";
+import { onMounted, provide, ref, shallowRef } from "vue";
+import "../assets/editor.css";
+import { liftWordListItem, sinkWordListItem } from "./command";
 import LinkHoverToolbar from "./components/Link/LinkHoverToolbar.vue";
 import LinkSettingsPanel from "./components/Link/LinkSettingsPanel.vue";
+import EditorMenu from "./components/Menu/EditorMenu.vue";
 import Search from "./components/Search/Search.vue";
-import { plugin_menuButtonState } from "./plugin/plugin-menuButtonState";
 import { plugin_highlightEmoji } from "./plugin/plugin-highlightEmoji";
-import { plugin_wordListNumber } from "./plugin/plugin-wordListNumber";
 import { usePlugin_linkHoverToolbar } from "./plugin/plugin-linkHoverToolbar";
+import { plugin_menuButtonState } from "./plugin/plugin-menuButtonState";
 import {
-  plugin_search,
+  activeIndex,
+  count,
   find,
   findNext,
   findPrev,
+  plugin_search,
   replace,
   replaceAll,
   reset,
-  count,
-  activeIndex,
 } from "./plugin/plugin-search";
-import "../assets/editor.css";
+import { plugin_wordListNumber } from "./plugin/plugin-wordListNumber";
+import schema from "./schema"; // step1 创建schema
 
 const editorView = shallowRef(); // vue3中必须用shallowRef。如果用ref，会报错 Applying a mismatched transaction
 provide("editorView", editorView);
@@ -125,6 +127,10 @@ onMounted(() => {
       plugin_wordListNumber,
       plugin_linkHoverToolbar,
       plugin_search,
+      keymap({
+        Tab: () => callMenuCommand(sinkWordListItem()),
+        "Shift-Tab": () => callMenuCommand(liftWordListItem()),
+      }),
     ]),
   });
   // step3 由 state 创建 view（因为使用了dom元素，所以必须放在onMounted中）
