@@ -1,4 +1,20 @@
-# study-prosemirror-demo
+study prosemirror demo
+
+已部署至 Github Pages，可[在线预览](https://liuzx-emily.github.io/study-prosemirror/)。
+
+## 本地开发
+
+安装依赖 `npm install`（github workflow 不识别 pnpm 的 lockfile，所以我使用 npm 安装依赖）
+
+启动项目 `npm run dev`
+
+## 部署
+
+本项目已设置 github workflow，push 后自动部署至 Github pages。
+
+---
+
+# 开发过程记录
 
 ## 创建项目
 
